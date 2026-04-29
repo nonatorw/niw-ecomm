@@ -25,8 +25,15 @@ cd niw-ecomm
 # Run with the Maven wrapper (downloads dependencies automatically)
 ./mvnw spring-boot:run
 ```
+## Wrap-up!
 
-The application starts on **<http://localhost:8080>**.
+|                                  | URL                                   |
+|----------------------------------|---------------------------------------|
+| Application starts on            | http://localhost:8080                 |
+| Swagger UI                       | http://localhost:8080/swagger-ui.html |
+| Raw OpenAPI spec (JSON)          | http://localhost:8080/api-docs        |
+| Access embedded database browser | http://localhost:8080/h2-console      |
+| Test reports generated at        | `target/surefire-reports/`            |
 
 A file-based H2 database is created at `./data/niw-ecomm` on first run and persists between restarts. Seed data is loaded automatically from `src/main/resources/db/data.sql`.
 
@@ -38,15 +45,12 @@ A file-based H2 database is created at `./data/niw-ecomm` on first run and persi
 ./mvnw test
 ```
 
-Test reports are generated at `target/surefire-reports/`.
-
 ---
 
 ## API Documentation (Swagger UI)
 
-Open in browser after starting the application: http://localhost:8080/swagger-ui.html
-
-Raw OpenAPI spec (JSON): http://localhost:8080/api-docs
+- Open in browser after starting the application: http://localhost:8080/swagger-ui.html
+- Raw OpenAPI spec (JSON): http://localhost:8080/api-docs
 
 ---
 
