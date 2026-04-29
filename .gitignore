@@ -1,313 +1,160 @@
-# Created by https://www.toptal.com/developers/gitignore/api/openframeworks+visualstudio,intellij+all,eclipse,java,maven,gradle
-# Edit at https://www.toptal.com/developers/gitignore?templates=openframeworks+visualstudio,intellij+all,eclipse,java,maven,gradle
+# Created by https://www.toptal.com/developers/gitignore/api/intellij+all,visualstudiocode,eclipse,maven,gradle
+# Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all,visualstudiocode,eclipse,maven,gradle
 
 ### Eclipse ###
-.metadata
+.apt_generated/
+.apt_generated_test/
+.externalToolBuilders/
+.recommenders/
+.sts4-cache/
 bin/
 tmp/
+
+.autotools
+.buildpath
+.cache-main
+.classpath
+.cproject
+.factorypath
+.loadpath
+.metadata
+.project
+.recommenders
+.scala_dependencies
+.springBeans
+.target
+.tern-project
+.texlipse
+.worksheet
+
 *.tmp
 *.bak
+*.launch
+*.pydevproject
 *.swp
 *~.nib
 local.properties
-.settings/
-.loadpath
-.recommenders
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# PyDev specific (Python IDE for Eclipse)
-*.pydevproject
-
-# CDT-specific (C/C++ Development Tooling)
-.cproject
-
-# CDT- autotools
-.autotools
-
-# Java annotation processor (APT)
-.factorypath
-
-# PDT-specific (PHP Development Tools)
-.buildpath
-
-# sbteclipse plugin
-.target
-
-# Tern plugin
-.tern-project
-
-# TeXlipse plugin
-.texlipse
-
-# STS (Spring Tool Suite)
-.springBeans
-
-# Code Recommenders
-.recommenders/
-
-# Annotation Processing
-.apt_generated/
-.apt_generated_test/
-
-# Scala IDE specific (Scala & Java development for Eclipse)
-.cache-main
-.scala_dependencies
-.worksheet
-
-# Uncomment this line if you wish to ignore the project description file.
-# Typically, this file would be tracked if it contains build/dependency configurations:
-#.project
-
-### Eclipse Patch ###
-# Spring Boot Tooling
-.sts4-cache/
 
 ### Intellij+all ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
-
-# AWS User-specific
-.idea/**/aws.xml
-
-# Generated files
-.idea/**/contentModel.xml
-
-# Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
-
-# Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
-
-# Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
-# since they will be recreated, and may cause churn.  Uncomment if using
-# auto-import.
-# .idea/artifacts
-# .idea/compiler.xml
-# .idea/jarRepositories.xml
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
-
-# CMake
+.idea/
+.idea/*
+.idea/sonarlint/
+.idea/httpRequests
+.idea_modules/
 cmake-build-*/
-
-# Mongo Explorer plugin
-.idea/**/mongoSettings.xml
-
-# File-based project format
-*.iws
-
-# IntelliJ
 out/
 
-# mpeltonen/sbt-idea plugin
-.idea_modules/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-# Cursive Clojure plugin
+.idea/**/aws.xml
+.idea/**/contentModel.xml
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/dataSources/
+.idea/**/dbnavigator.xml
+.idea/**/dictionaries
+.idea/**/dynamic.xml
+.idea/**/gradle.xml
+.idea/**/libraries
+.idea/**/mongoSettings.xml
+.idea/**/shelf
+.idea/**/sqlDataSources.xml
+.idea/**/tasks.xml
+.idea/**/uiDesigner.xml
+.idea/**/usage.statistics.xml
+.idea/**/workspace.xml
+.idea/caches/build_file_checksums.ser
 .idea/replstate.xml
 
-# SonarLint plugin
-.idea/sonarlint/
+*.iml
+*.ipr
+*.iws
 
-# Crashlytics plugin (for Android Studio and IntelliJ)
+atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
-crashlytics.properties
 crashlytics-build.properties
+crashlytics.properties
 fabric.properties
-
-# Editor-based Rest Client
-.idea/httpRequests
-
-# Android studio 3.1+ serialized cache file
-.idea/caches/build_file_checksums.ser
-
-### Intellij+all Patch ###
-# Ignore everything but code style settings and run configurations
-# that are supposed to be shared within teams.
-
-.idea/*
 
 !.idea/codeStyles
 !.idea/runConfigurations
 
-### Java ###
-# Compiled class file
-*.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
-
 ### Maven ###
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
+
 .mvn/timing.properties
-# https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
-# Eclipse m2e generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
+buildNumber.properties
+dependency-reduced-pom.xml
+pom.xml.next
+pom.xml.releaseBackup
+pom.xml.tag
+pom.xml.versionsBackup
+release.properties
 
-### OpenFrameworks+VisualStudio ###
-# ignore generated binaries
-# but not the data folder
+### VisualStudioCode ###
+.history/
+.vscode/
+.vscode/*
 
-/bin/*
-!/bin/data/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-# general
+*.vsix
 
-[Bb]uild/
-[Oo]bj/
-*.o
-[Dd]ebug*/
-[Rr]elease*/
-*.mode*
-*.app/
-*.pyc
-.svn/
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
 
-# IDE files which should
-# be ignored
+### Gradle ###
+.gradle/
+**/build/
+build/
 
-# XCode
-*.pbxuser
-*.perspective
-*.perspectivev3
-*.mode1v3
-*.mode2v3
-# XCode 4
-xcuserdata
-*.xcworkspace
+.gradletasknamecache
+*.hprof
+gradle-app.setting
 
-# Code::Blocks
-*.depend
-*.layout
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+!src/**/build/
 
-# Visual Studio
-*.sdf
-*.opensdf
-*.suo
-*.pdb
-*.ilk
-*.aps
-ipch/
+# End of https://www.toptal.com/developers/gitignore/api/intellij+all,visualstudiocode,eclipse,maven,gradle
 
-# Eclipse
-.externalToolBuilders
-
-# operating system
-
-# Linux
-*~
-# KDE
-.directory
-.AppleDouble
+# NetBeans
+nb-configuration.xml
 
 # OSX
 .DS_Store
-# Thumbnails
-._*
 
-# Windows
-# Image file caches
-Thumbs.db
-# Folder config file
-Desktop.ini
+# Vim
+*.swp
+*.swo
 
-# Android
-.csettings
+# patch
+*.orig
+*.rej
 
-### OpenFrameworks+VisualStudio Patch ###
-.vs/
-*.ncb
-*.opendb
-*.cachefile
-*.VC.db
-*.VC.VC.opendb
-*.psess
-*.vsp
-*.vspx
-*.sap
+# Local environment
+.env
 
-### Gradle ###
-.gradle
-**/build/
-!src/**/build/
+# Plugin directory
+/.quarkus/cli/plugins/
 
-# Ignore Gradle GUI config
-gradle-app.setting
+# TLS Certificates
+.certs/
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Avoid ignore Gradle wrappper properties
-!gradle-wrapper.properties
-
-# Cache of project
-.gradletasknamecache
-
-# Eclipse Gradle plugin generated files
-# Eclipse Core
-# JDT-specific (Eclipse Java Development Tools)
-
-### Gradle Patch ###
-# Java heap dump
-*.hprof
-
-# End of https://www.toptal.com/developers/gitignore/api/openframeworks+visualstudio,intellij+all,eclipse,java,maven,gradle
+# GenAI
+.claude/
+.claude/*
+CLAUDE.md
 
 # H2 file database
 data/
