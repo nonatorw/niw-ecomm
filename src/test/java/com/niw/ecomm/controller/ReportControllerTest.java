@@ -16,6 +16,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(ReportController.class)
+/**
+ * Unit tests for {@link ReportController}.
+ *
+ * <p>
+ * Uses
+ * {@link org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest} to
+ * load only the Spring MVC web layer in isolation.
+ * {@link CustomerReportService} is replaced with a Mockito mock so that tests
+ * focus on the HTTP layer without involving any service logic or database.
+ *
+ * <p>
+ * Tests in this class verify: HTTP routing, response serialisation, and correct
+ * delegation to the report service.
+ */
 class ReportControllerTest {
 
   @MockitoBean

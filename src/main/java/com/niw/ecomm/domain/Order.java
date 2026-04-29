@@ -96,8 +96,8 @@ public class Order {
 
   /**
    * Returns the customer's id as a {@link String} for use in service-layer
-   * filtering.
-   * Returns {@code null} when the customer is not set or has no id yet.
+   * filtering. Returns {@code null} when the customer is not set or has no id
+   * yet.
    *
    * @return string representation of the customer id, or {@code null}
    */

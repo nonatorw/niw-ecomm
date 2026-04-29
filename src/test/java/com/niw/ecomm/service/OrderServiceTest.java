@@ -18,6 +18,20 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class OrderServiceTest {
+  /**
+   * Unit tests for {@link OrderService}.
+   *
+   * <p>
+   * Plain JUnit 5 tests with no Spring context. Exercises business logic in
+   * complete isolation by constructing {@link com.niw.ecomm.domain.Order} and
+   * {@link com.niw.ecomm.domain.OrderItem} domain objects directly, without
+   * involving any repository, database, or web layer.
+   *
+   * <p>
+   * Tests are organised into nested classes, one per service method, to group
+   * related scenarios and keep {@link org.junit.jupiter.api.DisplayName} labels
+   * concise.
+   */
 
   private OrderService service;
   private Customer alice;
@@ -26,14 +40,21 @@ class OrderServiceTest {
   @BeforeEach
   void setUp() {
     service = new OrderService();
-    alice = new Customer(1L, "Alice", "alice@example.com");
-    bruno = new Customer(2L, "Bruno", "bruno@example.com");
+    alice = new Customer(1L,
+                         "Alice",
+                         "alice@example.com");
+    bruno = new Customer(2L,
+                         "Bruno",
+                         "bruno@example.com");
   }
 
   // --- calculateTotal ---
 
   @Nested
   @DisplayName("calculateTotal")
+  /**
+   * Tests for {@link OrderService#calculateTotal(Order)}.
+   */
   class CalculateTotal {
 
     /**
@@ -128,6 +149,9 @@ class OrderServiceTest {
 
   @Nested
   @DisplayName("getOrdersByCustomer")
+  /**
+   * Tests for {@link OrderService#getOrdersByCustomer(java.util.List, String)}.
+   */
   class GetOrdersByCustomer {
 
     /**
@@ -206,6 +230,9 @@ class OrderServiceTest {
 
   @Nested
   @DisplayName("groupByStatus")
+  /**
+   * Tests for {@link OrderService#groupByStatus(java.util.List)}.
+   */
   class GroupByStatus {
 
     /**
@@ -289,6 +316,9 @@ class OrderServiceTest {
 
   @Nested
   @DisplayName("findMostExpensive")
+  /**
+   * Tests for {@link OrderService#findMostExpensive(java.util.List)}.
+   */
   class FindMostExpensive {
 
     /**

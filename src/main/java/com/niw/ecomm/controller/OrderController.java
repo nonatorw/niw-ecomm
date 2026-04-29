@@ -1,6 +1,8 @@
 package com.niw.ecomm.controller;
 
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +10,17 @@ import java.util.Map.Entry;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,6 +49,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * <p>
  * Base path: {@code /api/orders}
  */
+@Validated
 @RestController
 @RequestMapping("/api/orders")
 @Tag(name = "Orders", description = "Order management operations")
@@ -73,18 +81,14 @@ public class OrderController {
    *                items
    * @return {@code 201 Created} with the persisted {@link OrderResponse} and a
    *         {@code Location} header; {@code 400 Bad Request} if the referenced
-   *         customer does not exist or if {@code items} is null or empty
+   *         customer does not exist, or if the request fails Bean Validation
+   *         (null {@code customerId}, null or empty {@code items}, invalid item
+   *         fields)
    */
   @PostMapping
   @Operation(summary = "Create order",
              description = "Creates a new order with the provided items")
-  public ResponseEntity<OrderResponse> create(@RequestBody OrderRequest request) {
-    if (request.items() == null
-    ||  request.items().isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                        "items must not be null or empty");
-    }
-
+  public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest request) {
     var customer =
         this.customerRepository.findById(request.customerId())
                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -141,7 +145,7 @@ public class OrderController {
    */
   @GetMapping("/{id}")
   @Operation(summary = "Get order by id")
-  public ResponseEntity<OrderResponse> getById(@PathVariable Long id) {
+  public ResponseEntity<OrderResponse> getById(@Positive @PathVariable Long id) {
     return this.orderRepository.findById(id)
                                .map(order -> ResponseEntity.ok(
                                                 OrderResponse.from(order,
@@ -160,7 +164,7 @@ public class OrderController {
   @GetMapping("/{id}/total")
   @Operation(summary = "Calculate order total",
              description = "Returns the total value of a specific order")
-  public ResponseEntity<BigDecimal> total(@PathVariable Long id) {
+  public ResponseEntity<BigDecimal> total(@Positive @PathVariable Long id) {
     return this.orderRepository.findById(id)
                .map(order -> ResponseEntity.ok(this.orderService.calculateTotal(order)))
                .orElse(ResponseEntity.notFound()
@@ -178,10 +182,23 @@ public class OrderController {
   @Operation(summary = "Orders by customer",
              description = "Returns all orders for a given customer id")
   public ResponseEntity<List<OrderResponse>> byCustomer(@PathVariable String customerId) {
+    String decodedCustomerId;
+
+    try {
+      decodedCustomerId = URLDecoder.decode(customerId, StandardCharsets.UTF_8);
+    } catch (IllegalArgumentException _) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid customer ID encoding");
+    }
+
+    if (decodedCustomerId == null
+    ||  decodedCustomerId.isBlank()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Customer ID cannot be blank");
+    }
+
     List<Order> all = this.orderRepository.findAll();
 
     List<OrderResponse> result =
-        this.orderService.getOrdersByCustomer(all, customerId)
+        this.orderService.getOrdersByCustomer(all, decodedCustomerId)
                          .stream()
                          .map(order -> OrderResponse.from(order,
                                                           this.orderService.calculateTotal(order)))

@@ -187,13 +187,100 @@ class OrderApiIntegrationTest {
   }
 
   /**
+   * Verifies that a null {@code customerId} in the request body returns 400.
+   */
+  @Test
+  @DisplayName("POST /api/orders returns 400 when customerId is null")
+  void createReturnsBadRequestWhenCustomerIdIsNull() {
+    String body = """
+        {
+          "customerId": null,
+          "items": [{ "productId": "PROD-001", "quantity": 1, "unitPrice": 10.00 }]
+        }
+        """;
+    RestAssured.given().contentType(ContentType.JSON)
+                       .body(body)
+               .when().post("/api/orders")
+               .then().statusCode(400)
+                      .body("error", Matchers.notNullValue());
+  }
+
+  /**
+   * Verifies that a zero {@code quantity} in any item returns 400.
+   */
+  @Test
+  @DisplayName("POST /api/orders returns 400 when quantity is zero")
+  void createReturnsBadRequestWhenQuantityIsZero() {
+    String body = """
+        {
+          "customerId": 1,
+          "items": [{ "productId": "PROD-001", "quantity": 0, "unitPrice": 10.00 }]
+        }
+        """;
+    RestAssured.given().contentType(ContentType.JSON)
+                       .body(body)
+               .when().post("/api/orders")
+               .then().statusCode(400);
+  }
+
+  /**
+   * Verifies that a blank {@code productId} in any item returns 400.
+   */
+  @Test
+  @DisplayName("POST /api/orders returns 400 when productId is blank")
+  void createReturnsBadRequestWhenProductIdIsBlank() {
+    String body = """
+        {
+          "customerId": 1,
+          "items": [{ "productId": "  ", "quantity": 1, "unitPrice": 10.00 }]
+        }
+        """;
+    RestAssured.given().contentType(ContentType.JSON)
+                       .body(body)
+               .when().post("/api/orders")
+               .then().statusCode(400);
+  }
+
+  /**
+   * Verifies that a zero order id returns 400.
+   */
+  @Test
+  @DisplayName("GET /api/orders/{id} returns 400 when id is zero")
+  void getByIdReturnsBadRequestWhenIdIsZero() {
+    RestAssured.given().accept(ContentType.JSON)
+               .when().get("/api/orders/{id}", 0)
+               .then().statusCode(400);
+  }
+
+  /**
+   * Verifies that a negative order id returns 400.
+   */
+  @Test
+  @DisplayName("GET /api/orders/{id} returns 400 when id is negative")
+  void getByIdReturnsBadRequestWhenIdIsNegative() {
+    RestAssured.given().accept(ContentType.JSON)
+               .when().get("/api/orders/{id}", -1)
+               .then().statusCode(400);
+  }
+
+  /**
+   * Verifies that a negative order id on the total endpoint returns 400.
+   */
+  @Test
+  @DisplayName("GET /api/orders/{id}/total returns 400 when id is negative")
+  void totalReturnsBadRequestWhenIdIsNegative() {
+    RestAssured.given().accept(ContentType.JSON)
+               .when().get("/api/orders/{id}/total", -1)
+               .then().statusCode(400);
+  }
+
+  /**
    * Verifies that submitting an order with a null {@code items} field returns
    * 400.
    *
    * <p>
-   * The controller guards against null or empty item lists before attempting to
-   * iterate, so the failure is explicit and client-visible rather than an
-   * unhandled NPE.
+   * Bean Validation rejects the request before the controller body is entered,
+   * so the failure is explicit and client-visible rather than an unhandled NPE.
    */
   @Test
   @DisplayName("POST /api/orders returns 400 when items field is null")
