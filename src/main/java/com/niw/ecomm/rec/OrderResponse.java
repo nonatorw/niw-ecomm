@@ -22,13 +22,14 @@ import com.niw.ecomm.domain.OrderStatus;
  * @param items        the line items included in this order
  * @param total        the total value computed as the sum of all item subtotals
  */
-public record OrderResponse(Long id,
-                            Long customerId,
-                            String customerName,
-                            OrderStatus status,
-                            LocalDate createdAt,
-                            List<OrderItemResponse> items,
-                            BigDecimal total) {
+public record OrderResponse(
+  Long id,
+  Long customerId,
+  String customerName,
+  OrderStatus status,
+  LocalDate createdAt,
+  List<OrderItemResponse> items,
+  BigDecimal total) {
 
   /**
    * REST response representation of a single line item within an order.
@@ -39,12 +40,13 @@ public record OrderResponse(Long id,
    * @param unitPrice the price per unit
    * @param subtotal  the line total computed as {@code quantity × unitPrice}
    */
-  public record OrderItemResponse(Long id,
-                                  String productId,
-                                  int quantity,
-                                  BigDecimal unitPrice,
-                                  BigDecimal subtotal) {
-  }
+  public record OrderItemResponse(
+    Long id,
+    String productId,
+    int quantity,
+    BigDecimal unitPrice,
+    BigDecimal subtotal
+  ) {}
 
   /**
    * Factory method that maps an {@link Order} entity and its pre-computed total
@@ -55,16 +57,17 @@ public record OrderResponse(Long id,
    *              {@code null}
    * @return a fully populated {@link OrderResponse}
    */
-  public static OrderResponse from(Order order, BigDecimal total) {
+  public static OrderResponse from(Order order,
+                                   BigDecimal total) {
     List<OrderItemResponse> itemResponses =
-            order.getItems()
-                 .stream()
-                 .map(i -> new OrderItemResponse(i.getId(),
-                                                 i.getProductId(),
-                                                 i.getQuantity(),
-                                                 i.getUnitPrice(),
-                                                 i.getUnitPrice().multiply(BigDecimal.valueOf(i.getQuantity()))))
-                 .toList();
+        order.getItems()
+             .stream()
+             .map(i -> new OrderItemResponse(i.getId(),
+                                             i.getProductId(),
+                                             i.getQuantity(),
+                                             i.getUnitPrice(),
+                                             i.getUnitPrice().multiply(BigDecimal.valueOf(i.getQuantity()))))
+             .toList();
 
     return new OrderResponse(order.getId(),
                              order.getCustomer().getId(),

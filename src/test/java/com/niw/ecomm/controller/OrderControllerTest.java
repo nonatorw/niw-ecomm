@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,164 +32,173 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @WebMvcTest(OrderController.class)
 class OrderControllerTest {
 
-    @MockitoBean
-    private OrderRepository orderRepository;
+  @MockitoBean
+  private OrderRepository orderRepository;
 
-    @MockitoBean
-    private CustomerRepository customerRepository;
+  @MockitoBean
+  private CustomerRepository customerRepository;
 
-    @MockitoBean
-    private OrderService orderService;
+  @MockitoBean
+  private OrderService orderService;
 
-    private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
+  private final MockMvc mockMvc;
+  private final ObjectMapper objectMapper;
 
-    OrderControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-    }
+  OrderControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
+    this.mockMvc = mockMvc;
+    this.objectMapper = objectMapper;
+  }
 
-    private Customer alice;
-    private Order order;
+  private Customer alice;
+  private Order order;
 
-    @BeforeEach
-    void setUp() {
-        alice = new Customer(1L, "Alice", "alice@example.com");
-        order = new Order(alice, OrderStatus.CONFIRMED, LocalDate.of(2024, 1, 10));
-        order.addItem(new OrderItem("PROD-001", 2, new BigDecimal("50.00")));
-    }
+  @BeforeEach
+  void setUp() {
+    alice = new Customer(1L,
+                         "Alice",
+                         "alice@example.com");
 
-    /**
-     * A successful {@code GET /api/orders} returns HTTP 200 with a JSON array
-     * containing all orders, including their customer name, status, and total.
-     */
-    @Test
-    @DisplayName("GET /api/orders returns 200 with list of orders")
-    void listAllReturns200() throws Exception {
-        Mockito.when(orderRepository.findAll())
-               .thenReturn(List.of(order));
+    order = new Order(alice,
+                      OrderStatus.CONFIRMED,
+                      LocalDate.of(2024, 1, 10));
 
-        Mockito.when(orderService.calculateTotal(order))
-               .thenReturn(new BigDecimal("100.00"));
+    order.addItem(new OrderItem("PROD-001",
+                                2,
+                                new BigDecimal("50.00")));
+  }
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders"))
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
-               .andExpect(MockMvcResultMatchers.jsonPath("$[0].customerName").value("Alice"))
-               .andExpect(MockMvcResultMatchers.jsonPath("$[0].status").value("CONFIRMED"))
-               .andExpect(MockMvcResultMatchers.jsonPath("$[0].total").value(100.00));
-    }
+  /**
+   * A successful {@code GET /api/orders} returns HTTP 200 with a JSON array
+   * containing all orders, including their customer name, status, and total.
+   */
+  @Test
+  @DisplayName("GET /api/orders returns 200 with list of orders")
+  void listAllReturns200() throws Exception {
+    Mockito.when(orderRepository.findAll())
+           .thenReturn(List.of(order));
 
-    /**
-     * {@code GET /api/orders/{id}} returns HTTP 404 when no order exists for the
-     * given id.
-     */
-    @Test
-    @DisplayName("GET /api/orders/{id} returns 404 when order not found")
-    void getByIdReturns404() throws Exception {
-        Mockito.when(orderRepository.findById(99L))
-               .thenReturn(Optional.empty());
+    Mockito.when(orderService.calculateTotal(order))
+           .thenReturn(new BigDecimal("100.00"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/99"))
-               .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/orders"))
+           .andExpect(MockMvcResultMatchers.status().isOk())
+           .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
+           .andExpect(MockMvcResultMatchers.jsonPath("$[0].customerName").value("Alice"))
+           .andExpect(MockMvcResultMatchers.jsonPath("$[0].status").value("CONFIRMED"))
+           .andExpect(MockMvcResultMatchers.jsonPath("$[0].total").value(100.00));
+  }
 
-    /**
-     * {@code GET /api/orders/{id}/total} returns HTTP 200 with the plain-text
-     * total value for a known order.
-     */
-    @Test
-    @DisplayName("GET /api/orders/{id}/total returns total value")
-    void totalReturnsValue() throws Exception {
-        Mockito.when(orderRepository.findById(1L))
-               .thenReturn(Optional.of(order));
+  /**
+   * {@code GET /api/orders/{id}} returns HTTP 404 when no order exists for the
+   * given id.
+   */
+  @Test
+  @DisplayName("GET /api/orders/{id} returns 404 when order not found")
+  void getByIdReturns404() throws Exception {
+    Mockito.when(orderRepository.findById(99L))
+           .thenReturn(Optional.empty());
 
-        Mockito.when(orderService.calculateTotal(order))
-               .thenReturn(new BigDecimal("100.00"));
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/99"))
+           .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/1/total"))
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.content().string("100.00"));
-    }
+  /**
+   * {@code GET /api/orders/{id}/total} returns HTTP 200 with the plain-text total
+   * value for a known order.
+   */
+  @Test
+  @DisplayName("GET /api/orders/{id}/total returns total value")
+  void totalReturnsValue() throws Exception {
+    Mockito.when(orderRepository.findById(1L))
+           .thenReturn(Optional.of(order));
 
-    /**
-     * {@code GET /api/orders/most-expensive} returns HTTP 404 when the order
-     * repository is empty.
-     */
-    @Test
-    @DisplayName("GET /api/orders/most-expensive returns 404 when no orders exist")
-    void mostExpensiveReturns404WhenEmpty() throws Exception {
-        Mockito.when(orderRepository.findAll())
-               .thenReturn(List.of());
+    Mockito.when(orderService.calculateTotal(order))
+           .thenReturn(new BigDecimal("100.00"));
 
-        Mockito.when(orderService.findMostExpensive(List.of()))
-               .thenReturn(Optional.empty());
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/1/total"))
+           .andExpect(MockMvcResultMatchers.status().isOk())
+           .andExpect(MockMvcResultMatchers.content().string("100.00"));
+  }
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/most-expensive"))
-               .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+  /**
+   * {@code GET /api/orders/most-expensive} returns HTTP 404 when the order
+   * repository is empty.
+   */
+  @Test
+  @DisplayName("GET /api/orders/most-expensive returns 404 when no orders exist")
+  void mostExpensiveReturns404WhenEmpty() throws Exception {
+    Mockito.when(orderRepository.findAll())
+           .thenReturn(List.of());
 
-    /**
-     * {@code GET /api/orders/most-expensive} returns HTTP 200 with the order
-     * identified as having the highest total.
-     */
-    @Test
-    @DisplayName("GET /api/orders/most-expensive returns order with highest total")
-    void mostExpensiveReturnsOrder() throws Exception {
-        Mockito.when(orderRepository.findAll())
-               .thenReturn(List.of(order));
+    Mockito.when(orderService.findMostExpensive(List.of()))
+           .thenReturn(Optional.empty());
 
-        Mockito.when(orderService.findMostExpensive(List.of(order)))
-               .thenReturn(Optional.of(order));
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/most-expensive"))
+           .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
 
-        Mockito.when(orderService.calculateTotal(order))
-               .thenReturn(new BigDecimal("100.00"));
+  /**
+   * {@code GET /api/orders/most-expensive} returns HTTP 200 with the order
+   * identified as having the highest total.
+   */
+  @Test
+  @DisplayName("GET /api/orders/most-expensive returns order with highest total")
+  void mostExpensiveReturnsOrder() throws Exception {
+    Mockito.when(orderRepository.findAll())
+           .thenReturn(List.of(order));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/most-expensive"))
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.jsonPath("$.customerName").value("Alice"))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.total").value(100.00));
-    }
+    Mockito.when(orderService.findMostExpensive(List.of(order)))
+           .thenReturn(Optional.of(order));
 
-    /**
-     * {@code POST /api/orders} returns HTTP 400 when the referenced customer does
-     * not exist in the repository.
-     */
-    @Test
-    @DisplayName("POST /api/orders returns 400 when customer not found")
-    void createReturns400WhenCustomerNotFound() throws Exception {
-        Mockito.when(customerRepository.findById(99L))
-               .thenReturn(Optional.empty());
+    Mockito.when(orderService.calculateTotal(order))
+           .thenReturn(new BigDecimal("100.00"));
 
-        OrderRequest request = new OrderRequest(99L,
-                                                List.of(new OrderItemRequest("PROD-001",
-                                                                             1,
-                                                                             new BigDecimal("10.00"))));
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/most-expensive"))
+           .andExpect(MockMvcResultMatchers.status().isOk())
+           .andExpect(MockMvcResultMatchers.jsonPath("$.customerName").value("Alice"))
+           .andExpect(MockMvcResultMatchers.jsonPath("$.total").value(100.00));
+  }
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/orders")
-               .contentType(MediaType.APPLICATION_JSON)
-               .content(objectMapper.writeValueAsString(request)))
-               .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
+  /**
+   * {@code POST /api/orders} returns HTTP 400 when the referenced customer does
+   * not exist in the repository.
+   */
+  @Test
+  @DisplayName("POST /api/orders returns 400 when customer not found")
+  void createReturns400WhenCustomerNotFound() throws Exception {
+    Mockito.when(customerRepository.findById(99L))
+           .thenReturn(Optional.empty());
 
-    /**
-     * {@code GET /api/orders/grouped-by-status} returns HTTP 200 with a JSON object
-     * whose keys are order status names and whose values are lists of orders.
-     */
-    @Test
-    @DisplayName("GET /api/orders/grouped-by-status returns grouped map")
-    void groupedByStatusReturnsMap() throws Exception {
-        Mockito.when(orderRepository.findAll())
-               .thenReturn(List.of(order));
+    OrderRequest request = new OrderRequest(99L,
+                                            List.of(new OrderItemRequest("PROD-001",
+                                                                         1,
+                                                                         new BigDecimal("10.00"))));
+    String requestBody = Objects.requireNonNull(objectMapper.writeValueAsString(request));
 
-        Mockito.when(orderService.groupByStatus(List.of(order)))
-               .thenReturn(Map.of(OrderStatus.CONFIRMED, List.of(order)));
+    mockMvc.perform(MockMvcRequestBuilders.post("/api/orders")
+                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                          .content(requestBody))
+           .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
 
-        Mockito.when(orderService.calculateTotal(order))
-               .thenReturn(new BigDecimal("100.00"));
+  /**
+   * {@code GET /api/orders/grouped-by-status} returns HTTP 200 with a JSON object
+   * whose keys are order status names and whose values are lists of orders.
+   */
+  @Test
+  @DisplayName("GET /api/orders/grouped-by-status returns grouped map")
+  void groupedByStatusReturnsMap() throws Exception {
+    Mockito.when(orderRepository.findAll())
+           .thenReturn(List.of(order));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/grouped-by-status"))
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.jsonPath("$.CONFIRMED.length()").value(1));
-    }
+    Mockito.when(orderService.groupByStatus(List.of(order)))
+           .thenReturn(Map.of(OrderStatus.CONFIRMED, List.of(order)));
+
+    Mockito.when(orderService.calculateTotal(order))
+           .thenReturn(new BigDecimal("100.00"));
+
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/grouped-by-status"))
+           .andExpect(MockMvcResultMatchers.status().isOk())
+           .andExpect(MockMvcResultMatchers.jsonPath("$.CONFIRMED.length()").value(1));
+  }
 }

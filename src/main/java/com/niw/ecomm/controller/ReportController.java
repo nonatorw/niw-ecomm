@@ -21,7 +21,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  */
 @RestController
 @RequestMapping("/api/reports")
-@Tag(name = "Reports", description = "Aggregated business reports")
+@Tag(name = "Reports",
+     description = "Aggregated business reports")
 public class ReportController {
 
   private final CustomerReportService reportService;

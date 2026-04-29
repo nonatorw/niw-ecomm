@@ -9,7 +9,8 @@ import java.math.BigDecimal;
  * @param quantity  the number of units to order; must be greater than zero
  * @param unitPrice the price per unit; must be positive
  */
-public record OrderItemRequest(String productId,
-                               int quantity,
-                               BigDecimal unitPrice) {
-}
+public record OrderItemRequest(
+  String productId,
+  int quantity,
+  BigDecimal unitPrice
+) {}

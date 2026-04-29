@@ -17,16 +17,16 @@ import org.springframework.boot.test.web.server.LocalServerPort;
  * Starts the complete Spring Boot application on a random port and exercises
  * the HTTP layer end-to-end against an in-memory H2 database pre-loaded with
  * the standard seed data ({@code db/data.sql}). The identity sequences are
- * reset to 100 after seeding so that new rows created during tests do not
- * clash with the fixed seed IDs (1–11).
+ * reset to 100 after seeding so that new rows created during tests do not clash
+ * with the fixed seed IDs (1–11).
  *
  * <p>
  * <strong>Seed data summary:</strong>
  * <ul>
- * <li>Customer 1 — Alice Ferreira, 4 orders (ids 1–4), total €420.00</li>
- * <li>Customer 2 — Bruno Matos, 3 orders (ids 5–7), total €290.00</li>
- * <li>Customer 3 — Carla Sousa, 2 orders (ids 8–9), total €550.00</li>
- * <li>Customer 4 — Daniel Pinto, 1 order (id 10), total €80.00</li>
+ *     <li>Customer 1 — Alice Ferreira, 4 orders (ids 1–4), total €420.00</li>
+ *     <li>Customer 2 — Bruno Matos, 3 orders (ids 5–7), total €290.00</li>
+ *     <li>Customer 3 — Carla Sousa, 2 orders (ids 8–9), total €550.00</li>
+ *     <li>Customer 4 — Daniel Pinto, 1 order (id 10), total €80.00</li>
  * </ul>
  *
  * <p>
@@ -34,14 +34,15 @@ import org.springframework.boot.test.web.server.LocalServerPort;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
                 properties = {
-                  "spring.datasource.url=jdbc:h2:mem:order-it-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
-                  "spring.datasource.username=sa",
-                  "spring.datasource.password=",
-                  "spring.jpa.hibernate.ddl-auto=none",
-                  "spring.sql.init.mode=always",
-                  "spring.sql.init.schema-locations=classpath:db/schema.sql",
-                  "spring.sql.init.data-locations=classpath:db/data.sql,classpath:db/reset-identities.sql"
-              })
+                                "spring.datasource.url=jdbc:h2:mem:order-it-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+                                "spring.datasource.username=sa",
+                                "spring.datasource.password=",
+                                "spring.jpa.hibernate.ddl-auto=none",
+                                "spring.sql.init.mode=always",
+                                "spring.sql.init.schema-locations=classpath:db/schema.sql",
+                                "spring.sql.init.data-locations=classpath:db/data.sql,classpath:db/reset-identities.sql"
+                              }
+                )
 class OrderApiIntegrationTest {
 
   @LocalServerPort
@@ -103,10 +104,10 @@ class OrderApiIntegrationTest {
     RestAssured.given().accept(ContentType.JSON)
                .when().get("/api/orders/most-expensive")
                .then().statusCode(200)
-                      .body("id",           Matchers.equalTo(8))
+                      .body("id", Matchers.equalTo(8))
                       .body("customerName", Matchers.equalTo("Carla Sousa"))
-                      .body("total",        Matchers.equalTo(500.00f))
-                      .body("items",        Matchers.hasSize(1));
+                      .body("total", Matchers.equalTo(500.00f))
+                      .body("items", Matchers.hasSize(1));
   }
 
   /**
@@ -132,8 +133,8 @@ class OrderApiIntegrationTest {
    * Verifies full order creation with a valid payload.
    *
    * <p>
-   * Expected total: 2 × €49.99 + 1 × €15.00 = <strong>€114.98</strong>.
-   * The response must include a {@code Location} header pointing to the created
+   * Expected total: 2 × €49.99 + 1 × €15.00 = <strong>€114.98</strong>. The
+   * response must include a {@code Location} header pointing to the created
    * resource.
    */
   @Test
@@ -155,12 +156,12 @@ class OrderApiIntegrationTest {
                .when().post("/api/orders")
                .then().statusCode(201)
                       .header("Location", Matchers.containsString("/api/orders/"))
-                      .body("id",           Matchers.notNullValue())
-                      .body("customerId",   Matchers.equalTo(1))
+                      .body("id", Matchers.notNullValue())
+                      .body("customerId", Matchers.equalTo(1))
                       .body("customerName", Matchers.equalTo("Alice Ferreira"))
-                      .body("status",       Matchers.equalTo("PENDING"))
-                      .body("items",        Matchers.hasSize(2))
-                      .body("total",        Matchers.equalTo(114.98f));
+                      .body("status", Matchers.equalTo("PENDING"))
+                      .body("items", Matchers.hasSize(2))
+                      .body("total", Matchers.equalTo(114.98f));
   }
 
   /**
@@ -190,8 +191,8 @@ class OrderApiIntegrationTest {
    * 400.
    *
    * <p>
-   * The controller guards against null or empty item lists before attempting
-   * to iterate, so the failure is explicit and client-visible rather than an
+   * The controller guards against null or empty item lists before attempting to
+   * iterate, so the failure is explicit and client-visible rather than an
    * unhandled NPE.
    */
   @Test

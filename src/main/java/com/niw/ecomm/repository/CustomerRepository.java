@@ -30,15 +30,16 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
    *         customer qualifies
    */
   @Query("""
-      SELECT new com.niw.ecomm.rec.CustomerOrderSummary(c.name,
-                                                        COUNT(DISTINCT o.id),
-                                                        SUM(oi.quantity * oi.unitPrice))
-        FROM Customer c
-        JOIN c.orders o
-        JOIN o.items oi
-       GROUP BY c.id, c.name
-      HAVING COUNT(DISTINCT o.id) > 2
-       ORDER BY SUM(oi.quantity * oi.unitPrice) DESC
-      """)
+         SELECT new com.niw.ecomm.rec.CustomerOrderSummary(c.name,
+                                                           COUNT(DISTINCT o.id),
+                                                           SUM(oi.quantity * oi.unitPrice))
+           FROM Customer c
+           JOIN c.orders o
+           JOIN o.items oi
+          GROUP BY c.id,
+                   c.name
+         HAVING COUNT(DISTINCT o.id) > 2
+          ORDER BY SUM(oi.quantity * oi.unitPrice) DESC
+         """)
   List<CustomerOrderSummary> findTopSpenders();
 }

@@ -28,8 +28,8 @@ public class OrderService {
    *
    * <p>
    * The total is the sum of {@code quantity × unitPrice} for every
-   * {@link com.niw.ecomm.domain.OrderItem}
-   * in the order. Returns {@link BigDecimal#ZERO} for an order with no items.
+   * {@link com.niw.ecomm.domain.OrderItem} in the order. Returns
+   * {@link BigDecimal#ZERO} for an order with no items.
    *
    * @param order the order whose total is to be calculated; must not be
    *              {@code null}
@@ -40,8 +40,8 @@ public class OrderService {
                 .stream()
                 .map(item -> item.getUnitPrice()
                                  .multiply(BigDecimal.valueOf(item.getQuantity())))
-                                 .reduce(BigDecimal.ZERO,
-                                         BigDecimal::add);
+                .reduce(BigDecimal.ZERO,
+                        BigDecimal::add);
   }
 
   /**
@@ -57,13 +57,13 @@ public class OrderService {
    * @return a list of matching orders; never {@code null}
    */
   public List<Order> getOrdersByCustomer(List<Order> orders, String customerId) {
-    if (customerId == null){
+    if (customerId == null) {
       return List.of();
     }
 
     return orders.stream()
-                 .filter(o -> Objects.equals(o.getCustomerId(), customerId))
-                 .collect(Collectors.toList());
+                 .filter(order -> order.getCustomerId().equals(customerId))
+                 .toList();
   }
 
   /**
@@ -86,9 +86,9 @@ public class OrderService {
    * Returns the order with the highest total value from a list.
    *
    * <p>
-   * The total for each order is computed via {@link #calculateTotal(Order)}.
-   * When two orders have equal totals, the first one encountered is returned.
-   * Returns {@link Optional#empty()} for an empty input list.
+   * The total for each order is computed via {@link #calculateTotal(Order)}. When
+   * two orders have equal totals, the first one encountered is returned. Returns
+   * {@link Optional#empty()} for an empty input list.
    *
    * @param orders the orders to search; must not be {@code null}
    * @return an {@link Optional} containing the most expensive order,

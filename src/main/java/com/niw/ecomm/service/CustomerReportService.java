@@ -29,12 +29,12 @@ public class CustomerReportService {
   }
 
   /**
-   * Returns a summary of customers who have placed more than two orders,
-   * ordered by their total amount spent in descending order.
+   * Returns a summary of customers who have placed more than two orders, ordered
+   * by their total amount spent in descending order.
    *
    * <p>
-   * Each entry contains the customer name, order count, and total spent,
-   * as computed by the JPQL aggregation query in
+   * Each entry contains the customer name, order count, and total spent, as
+   * computed by the JPQL aggregation query in
    * {@link CustomerRepository#findTopSpenders()}.
    *
    * @return list of {@link CustomerOrderSummary}; empty if no customer qualifies

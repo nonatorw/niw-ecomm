@@ -44,27 +44,16 @@ Test reports are generated at `target/surefire-reports/`.
 
 ## API Documentation (Swagger UI)
 
-Open in browser after starting the application:
+Open in browser after starting the application: http://localhost:8080/swagger-ui.html
 
-```bash
-http://localhost:8080/swagger-ui.html
-```
-
-Raw OpenAPI spec (JSON):
-
-```bash
-http://localhost:8080/api-docs
-```
+Raw OpenAPI spec (JSON): http://localhost:8080/api-docs
 
 ---
 
 ## H2 Console
 
-Access the embedded database browser:
+Access the embedded database browser: http://localhost:8080/h2-console
 
-```bash
-http://localhost:8080/h2-console
-```
 
 | Field    | Value                                            |
 |----------|--------------------------------------------------|

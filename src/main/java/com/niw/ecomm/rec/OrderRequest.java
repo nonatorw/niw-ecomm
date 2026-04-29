@@ -10,6 +10,7 @@ import java.util.List;
  * @param items      the list of line items to include in the order; must not be
  *                   empty
  */
-public record OrderRequest(Long customerId,
-                           List<OrderItemRequest> items) {
-}
+public record OrderRequest(
+  Long customerId,
+  List<OrderItemRequest> items
+) {}

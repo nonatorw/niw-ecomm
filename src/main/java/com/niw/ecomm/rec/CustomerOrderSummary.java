@@ -16,7 +16,8 @@ import java.math.BigDecimal;
  * @param totalSpent   the sum of {@code quantity × unitPrice} across all items
  *                     of all orders
  */
-public record CustomerOrderSummary(String customerName,
-                                   long orderCount,
-                                   BigDecimal totalSpent) {
-}
+public record CustomerOrderSummary(
+  String customerName,
+  long orderCount,
+  BigDecimal totalSpent
+) {}
